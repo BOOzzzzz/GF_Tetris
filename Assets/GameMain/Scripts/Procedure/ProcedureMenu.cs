@@ -9,7 +9,7 @@ namespace BOO.Procedure
         {
             base.OnEnter(procedureOwner);
 
-            GameEntry.UI.OpenUIForm(AssetUtility.GetUIFormAsset("UIFormMenu"), "Default");
+            GameEntry.UI.OpenUIForm(AssetUtility.GetUIFormAsset("UIFormMenu"), "Menu");
         }
     }
 }
