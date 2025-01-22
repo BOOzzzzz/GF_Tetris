@@ -16,8 +16,7 @@ namespace BOO.Procedure
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
             
-            ChangeState<ProcedureMenu>(procedureOwner);
-            GameEntry.Scene.LoadScene(AssetUtility.GetSceneAsset("GameMenu"));
+            ChangeState<ProcedurePreload>(procedureOwner);
         }
     }
 }

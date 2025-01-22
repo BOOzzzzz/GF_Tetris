@@ -2,17 +2,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using BOO;
+using BOO.Procedure;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 using GameEntry = BOO.GameEntry;
 
-public class UIFormMainMenuLogic : UIFormLogic
+public class UIFormMenuLogic : UIFormLogicEx
 {
     public Button btnStart;
     public Button btnOption;
     public Button btnQuit;
+
+    private ProcedureMenu procedureMenu;
 
     protected override void OnInit(object userData)
     {
@@ -21,14 +24,8 @@ public class UIFormMainMenuLogic : UIFormLogic
         
         btnStart.onClick.AddListener((() =>
         {
-            string[] loadedSceneAssetNames = GameEntry.Scene.GetLoadedSceneAssetNames();
-            for (int i = 0; i < loadedSceneAssetNames.Length; i++)
-            {
-                GameEntry.Scene.UnloadScene(loadedSceneAssetNames[i]);
-            }
-            GameEntry.UI.CloseAllLoadedUIForms();
-            GameEntry.UI.OpenUIForm(AssetUtility.GetUIFormAsset("UIFormMain"), "Main");
-            GameEntry.Scene.LoadScene(AssetUtility.GetSceneAsset("GameMain"));
+            procedureMenu = (ProcedureMenu)userData;
+            procedureMenu.startGame = true;
         }));
         
         btnOption.onClick.AddListener((() =>
