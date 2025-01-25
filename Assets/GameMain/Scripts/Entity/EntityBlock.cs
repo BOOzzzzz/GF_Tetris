@@ -1,4 +1,5 @@
 using System;
+using BOO;
 using BOO.Procedure;
 using GameMain.Scripts.Event;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class EntityBlock : EntityLogic
     private float fallTime = 1.0f;
     private float timer = 0.0f;
     private bool isLocked = false;
+    private Vector3 pivot;
 
     private ProcedureMain procedureMain;
 
@@ -18,7 +20,8 @@ public class EntityBlock : EntityLogic
         base.OnShow(userData);
 
         procedureMain = (ProcedureMain)userData;
-        transform.position = procedureMain.originPosition;
+        CachedTransform.position = procedureMain.originPosition;
+        pivot = procedureMain.pivot;
     }
 
     protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
@@ -51,16 +54,28 @@ public class EntityBlock : EntityLogic
             if (!IsBlockInArea())
             {
                 CachedTransform.position -= Vector3.down;
-                AddBlockToGrid();
-                procedureMain.ClearTheRows(BlockRange().Item1, BlockRange().Item2);
+                AddBlockToGrid(procedureMain.ClearTheRows,BlockRange().Item1, BlockRange().Item2);
                 GameEntry.Event.Fire(this, SpawnBlockEventArgs.Create());
                 isLocked = true;
+                if (BlockRange().Item2 >= 18)
+                {
+                    GameEntry.Event.Fire(this, GameOverEventArgs.Create());
+                }
             }
 
             timer = 0;
         }
 
         fallTime = Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S) ? 0.02f : 1f;
+
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            transform.RotateAround(transform.TransformPoint(pivot),Vector3.forward, 90);
+            if (!IsBlockInArea())
+            {
+                transform.RotateAround(transform.TransformPoint(pivot), Vector3.forward, -90);
+            }
+        }
     }
 
     private bool IsBlockInArea()
@@ -79,7 +94,7 @@ public class EntityBlock : EntityLogic
         return true;
     }
 
-    private void AddBlockToGrid()
+    private void AddBlockToGrid(Action<int,int> onComplete,int min,int max)
     {
         foreach (Transform child in transform)
         {
@@ -87,6 +102,8 @@ public class EntityBlock : EntityLogic
             var y = Mathf.RoundToInt(child.position.y);
             procedureMain.grid[x, y] = child;
         }
+        
+        onComplete?.Invoke(min,max);
     }
     
     private Tuple<int, int> BlockRange()

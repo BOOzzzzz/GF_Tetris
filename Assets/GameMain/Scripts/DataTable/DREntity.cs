@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2025-01-22 20:52:06.598
+// 生成时间：2025-01-25 13:40:12.578
 //------------------------------------------------------------
 
 using GameFramework;
@@ -63,6 +63,15 @@ namespace BOO
             private set;
         }
 
+        /// <summary>
+        /// 获取旋转中心点。
+        /// </summary>
+        public Vector2 Pivot
+        {
+            get;
+            private set;
+        }
+
         public override bool ParseDataRow(string dataRowString, object userData)
         {
             string[] columnStrings = dataRowString.Split(DataTableExtension.DataSplitSeparators);
@@ -78,6 +87,7 @@ namespace BOO
             AssetName = columnStrings[index++];
             AssetGroup = columnStrings[index++];
             OriginPosition = DataTableExtension.ParseVector2(columnStrings[index++]);
+            Pivot = DataTableExtension.ParseVector2(columnStrings[index++]);
 
             GeneratePropertyArray();
             return true;
@@ -93,6 +103,7 @@ namespace BOO
                     AssetName = binaryReader.ReadString();
                     AssetGroup = binaryReader.ReadString();
                     OriginPosition = binaryReader.ReadVector2();
+                    Pivot = binaryReader.ReadVector2();
                 }
             }
 
