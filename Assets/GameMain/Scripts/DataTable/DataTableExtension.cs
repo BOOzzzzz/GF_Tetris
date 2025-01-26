@@ -23,4 +23,10 @@ public static class DataTableExtension
         string[] splitedValue = value.Split(',');
         return new Vector2(float.Parse(splitedValue[0]), float.Parse(splitedValue[1]));
     }
+    
+    public static Color ParseColor(string value)
+    {
+        string[] splitedValue = value.Split(',');
+        return new Color(float.Parse(splitedValue[0]), float.Parse(splitedValue[1]), float.Parse(splitedValue[2]), float.Parse(splitedValue[3]));
+    }
 }

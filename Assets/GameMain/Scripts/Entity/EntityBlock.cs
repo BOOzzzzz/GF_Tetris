@@ -10,7 +10,7 @@ public class EntityBlock : EntityLogic
 {
     private float fallTime = 1.0f;
     private float timer = 0.0f;
-    private bool isLocked = false;
+    private bool isLocked;
     private Vector3 pivot;
 
     private ProcedureMain procedureMain;
@@ -22,6 +22,25 @@ public class EntityBlock : EntityLogic
         procedureMain = (ProcedureMain)userData;
         CachedTransform.position = procedureMain.originPosition;
         pivot = procedureMain.pivot;
+        
+        timer = 0;
+        fallTime = 1;
+
+        foreach (Transform child in transform)
+        {
+            child.GetComponent<SpriteRenderer>().color = procedureMain.color;
+        }
+
+        if (!IsBlockInArea())
+        {
+            GameEntry.Event.Fire(this, GameOverEventArgs.Create());
+            GameEntry.Entity.HideEntity(Entity);
+            isLocked = true;
+        }
+        else
+        {
+            isLocked = false;
+        }
     }
 
     protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
@@ -54,13 +73,12 @@ public class EntityBlock : EntityLogic
             if (!IsBlockInArea())
             {
                 CachedTransform.position -= Vector3.down;
-                AddBlockToGrid(procedureMain.ClearTheRows,BlockRange().Item1, BlockRange().Item2);
-                GameEntry.Event.Fire(this, SpawnBlockEventArgs.Create());
-                isLocked = true;
-                if (BlockRange().Item2 >= 18)
+                AddBlockToGrid(((min, max) =>
                 {
-                    GameEntry.Event.Fire(this, GameOverEventArgs.Create());
-                }
+                    procedureMain.ClearTheRows(min, max);
+                    GameEntry.Event.Fire(this, SpawnBlockEventArgs.Create());
+                    isLocked = true;
+                }),BlockRange().Item1, BlockRange().Item2);
             }
 
             timer = 0;
@@ -102,7 +120,6 @@ public class EntityBlock : EntityLogic
             var y = Mathf.RoundToInt(child.position.y);
             procedureMain.grid[x, y] = child;
         }
-        
         onComplete?.Invoke(min,max);
     }
     

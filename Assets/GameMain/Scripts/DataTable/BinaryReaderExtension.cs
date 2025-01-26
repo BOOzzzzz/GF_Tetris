@@ -9,5 +9,10 @@ namespace BOO
         {
             return new Vector2(binaryReader.ReadSingle(), binaryReader.ReadSingle());
         }
+        
+        public static Color ReadColor(this BinaryReader binaryReader)
+        {
+            return new Color(binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle());
+        }
     }
 }

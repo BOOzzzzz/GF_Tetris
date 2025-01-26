@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2025-01-25 13:40:12.578
+// 生成时间：2025-01-26 16:00:22.230
 //------------------------------------------------------------
 
 using GameFramework;
@@ -72,6 +72,15 @@ namespace BOO
             private set;
         }
 
+        /// <summary>
+        /// 获取颜色。
+        /// </summary>
+        public Color Color
+        {
+            get;
+            private set;
+        }
+
         public override bool ParseDataRow(string dataRowString, object userData)
         {
             string[] columnStrings = dataRowString.Split(DataTableExtension.DataSplitSeparators);
@@ -88,6 +97,7 @@ namespace BOO
             AssetGroup = columnStrings[index++];
             OriginPosition = DataTableExtension.ParseVector2(columnStrings[index++]);
             Pivot = DataTableExtension.ParseVector2(columnStrings[index++]);
+            Color = DataTableExtension.ParseColor(columnStrings[index++]);
 
             GeneratePropertyArray();
             return true;
@@ -104,6 +114,7 @@ namespace BOO
                     AssetGroup = binaryReader.ReadString();
                     OriginPosition = binaryReader.ReadVector2();
                     Pivot = binaryReader.ReadVector2();
+                    Color = binaryReader.ReadColor();
                 }
             }
 

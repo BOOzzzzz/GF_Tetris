@@ -14,6 +14,7 @@ namespace BOO.Procedure
         public int height = 20;
         public Vector2 originPosition;
         public Vector2 pivot;
+        public Color color;
         public Transform[,] grid;
         
         private bool gameOver = false;
@@ -50,6 +51,7 @@ namespace BOO.Procedure
 
             GameEntry.Event.Unsubscribe(SpawnBlockEventArgs.EventId, SpawnBlock);
             GameEntry.Event.Unsubscribe(GameOverEventArgs.EventId, GameOverEvent);
+            ClearGrid();
         }
 
         private void GameOverEvent(object sender, GameEventArgs e)
@@ -63,6 +65,7 @@ namespace BOO.Procedure
             DREntity drEntity = dtEntity.GetDataRow(Random.Range(1, 8));
             originPosition = drEntity.OriginPosition;
             pivot = drEntity.Pivot;
+            color = drEntity.Color;
             GameEntry.Entity.ShowEntity<EntityBlock>(GameEntry.Entity.GenerateSerialID(),
                 AssetUtility.GetEntityAsset(drEntity.AssetName), drEntity.AssetGroup, userData: this);
         }
@@ -111,6 +114,17 @@ namespace BOO.Procedure
                         grid[i, j + 1] = null;
                         grid[i, j].transform.position += Vector3.down;
                     }
+                }
+            }
+        }
+
+        private void ClearGrid()
+        {
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    grid[i, j] = null;
                 }
             }
         }
