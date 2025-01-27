@@ -58,6 +58,8 @@ namespace BOO.Procedure
         private void PreloadResources()
         {
             LoadDataTable();
+            
+            //GameEntry.Resource.InitResources(InitResourcesComplete);
         }
 
         private void LoadDataTable()
@@ -91,6 +93,11 @@ namespace BOO.Procedure
             }
 
             Log.Error("Can not load data table '{0}' from '{1}' with error message '{2}'.", ne.DataTableAssetName, ne.DataTableAssetName, ne.ErrorMessage);
+        }
+        
+        private void InitResourcesComplete()
+        {
+            Debug.Log("Resources initialized.");
         }
     }
 }

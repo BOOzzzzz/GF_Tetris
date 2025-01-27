@@ -25,6 +25,11 @@ namespace BOO
         {
             return Utility.Text.Format("Assets/GameMain/Fonts/{0}.ttf", assetName);
         }
+        
+        public static string GetSpriteAsset(string assetName)
+        {
+            return Utility.Text.Format("Assets/GameMain/Assets/Sprite/{0}.png", assetName);
+        }
 
         public static string GetSceneAsset(string assetName)
         {

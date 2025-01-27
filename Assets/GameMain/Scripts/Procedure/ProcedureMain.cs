@@ -2,7 +2,9 @@
 using GameFramework.Event;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
+using GameFramework.Resource;
 using GameMain.Scripts.Event;
+using UGFExtensions.Await;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -12,12 +14,16 @@ namespace BOO.Procedure
     {
         public int width = 10;
         public int height = 20;
+        public Transform[,] grid;
+
         public Vector2 originPosition;
         public Vector2 pivot;
         public Color color;
-        public Transform[,] grid;
-        
+        public Sprite previewBlockSprite;
+
         private bool gameOver = false;
+        private EntityBlock currentEntity;
+        private EntityBlock previewEntity;
 
         protected override void OnInit(IFsm<IProcedureManager> procedureOwner)
         {
@@ -28,13 +34,23 @@ namespace BOO.Procedure
         protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
         {
             base.OnEnter(procedureOwner);
-
+            
+            
+            GameEntry.Resource.LoadAsset(AssetUtility.GetSpriteAsset("Block-Shadow@3x"),typeof(Sprite),new LoadAssetCallbacks(LoadAssetSuccess));
             GameEntry.Event.Subscribe(SpawnBlockEventArgs.EventId, SpawnBlock);
             GameEntry.Event.Subscribe(GameOverEventArgs.EventId, GameOverEvent);
+            GameEntry.Event.Subscribe(UpdatePreviewBlockEventArgs.EventId, UpdatePreviewBlockInfo);
+            AwaitableExtensions.SubscribeEvent();
             GameEntry.Event.Fire(this, SpawnBlockEventArgs.Create());
         }
 
-        protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
+        private void LoadAssetSuccess(string assetname, object asset, float duration, object userdata)
+        {
+            previewBlockSprite = asset as Sprite;
+        }
+
+        protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds,
+            float realElapseSeconds)
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
 
@@ -51,7 +67,17 @@ namespace BOO.Procedure
 
             GameEntry.Event.Unsubscribe(SpawnBlockEventArgs.EventId, SpawnBlock);
             GameEntry.Event.Unsubscribe(GameOverEventArgs.EventId, GameOverEvent);
+            GameEntry.Event.Unsubscribe(UpdatePreviewBlockEventArgs.EventId, UpdatePreviewBlockInfo);
+            AwaitableExtensions.UnsubscribeEvent();
             ClearGrid();
+        }
+
+        private void UpdatePreviewBlockInfo(object sender, GameEventArgs e)
+        {
+            var offset = currentEntity.CalculatePositionOffset();
+            Vector3 position = currentEntity.CachedTransform.position + offset;
+            Quaternion rotation = currentEntity.CachedTransform.rotation;
+            previewEntity.SetPreviewBlockInfo(position, rotation);
         }
 
         private void GameOverEvent(object sender, GameEventArgs e)
@@ -59,15 +85,28 @@ namespace BOO.Procedure
             gameOver = true;
         }
 
-        private void SpawnBlock(object sender, GameEventArgs e)
+        private async void SpawnBlock(object sender, GameEventArgs e)
         {
+            if (previewEntity != null)
+            {
+                if(previewEntity.isActiveAndEnabled)
+                    GameEntry.Entity.HideEntity(previewEntity.Entity);
+            }
+
             IDataTable<DREntity> dtEntity = GameEntry.DataTable.GetDataTable<DREntity>();
             DREntity drEntity = dtEntity.GetDataRow(Random.Range(1, 8));
             originPosition = drEntity.OriginPosition;
             pivot = drEntity.Pivot;
             color = drEntity.Color;
-            GameEntry.Entity.ShowEntity<EntityBlock>(GameEntry.Entity.GenerateSerialID(),
-                AssetUtility.GetEntityAsset(drEntity.AssetName), drEntity.AssetGroup, userData: this);
+            var current = await GameEntry.Entity.ShowEntityAsync(GameEntry.Entity.GenerateSerialID(),
+                typeof(EntityBlock),
+                AssetUtility.GetEntityAsset(drEntity.AssetName), drEntity.AssetGroup, userData: false);
+            var preview = await GameEntry.Entity.ShowEntityAsync(GameEntry.Entity.GenerateSerialID(),
+                typeof(EntityBlock),
+                AssetUtility.GetEntityAsset(drEntity.AssetName), drEntity.AssetGroup, userData: true);
+            currentEntity = current.Logic as EntityBlock;
+            previewEntity = preview.Logic as EntityBlock;
+            GameEntry.Event.Fire(this, UpdatePreviewBlockEventArgs.Create());
         }
 
         public void ClearTheRows(int min, int max)
