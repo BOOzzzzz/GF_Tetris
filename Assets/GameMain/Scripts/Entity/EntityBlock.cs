@@ -16,11 +16,12 @@ public class EntityBlock : EntityLogic
 
     private Vector3 originPosition;
     private Vector3 pivot;
-    private bool isPreviewBlock;
+    private BlockStatus status;
     private Color color;
     private Sprite originalSprite;
     private string originalName;
     private List<Vector2> blockPos;
+    private List<Vector2> nextBlockPos;
 
     private ProcedureMain procedureMain;
 
@@ -40,37 +41,56 @@ public class EntityBlock : EntityLogic
         base.OnShow(userData);
 
         name = originalName + " - " + EntityExtension.serialID;
-        isPreviewBlock = (bool)userData;
+        status = (BlockStatus)userData;
 
         procedureMain = GameEntry.Procedure.CurrentProcedure as ProcedureMain;
 
-        if (isPreviewBlock)
+        switch (status)
         {
-            isLocked = true;
+            case BlockStatus.Normal:
+                timer = 0;
+                fallTime = 1;
+
+                CachedTransform.position = procedureMain.originPos;
+                CachedTransform.rotation = Quaternion.identity;
+                pivot = procedureMain.pivot;
+                color = procedureMain.color;
+
+                isLocked = false;
+                break;
+            case BlockStatus.Preview:
+                isLocked = true;
+                break;
+            case BlockStatus.Next:
+                isLocked = true;
+                nextBlockPos = procedureMain.nextBlockPos;
+                int i = 0;
+                foreach (Transform child in transform)
+                {
+                    child.GetComponent<SpriteRenderer>().sprite = originalSprite;
+                    child.GetComponent<SpriteRenderer>().color = procedureMain.nextColor;
+                    child.gameObject.SetActive(true);
+                    child.localPosition = nextBlockPos[i];
+                    i++;
+                }
+
+                CachedTransform.position = new Vector3(13, 12, 0);
+                break;
         }
-        else
+
+        if (status != BlockStatus.Next)
         {
-            timer = 0;
-            fallTime = 1;
-
-            CachedTransform.position = procedureMain.originPos;
-            CachedTransform.rotation = Quaternion.identity;
-            pivot = procedureMain.pivot;
-            color = procedureMain.color;
-
-            isLocked = false;
-        }
-
-        blockPos = procedureMain.originBlockPos;
-        int index = 0;
-        foreach (Transform child in transform)
-        {
-            child.GetComponent<SpriteRenderer>().sprite =
-                isPreviewBlock ? procedureMain.previewBlockSprite : originalSprite;
-            child.GetComponent<SpriteRenderer>().color = isPreviewBlock ? Color.white : color;
-            child.gameObject.SetActive(true);
-            child.localPosition = blockPos[index];
-            index++;
+            blockPos = procedureMain.originBlockPos;
+            int index = 0;
+            foreach (Transform child in transform)
+            {
+                child.GetComponent<SpriteRenderer>().sprite =
+                    status==BlockStatus.Preview ? procedureMain.previewBlockSprite : originalSprite;
+                child.GetComponent<SpriteRenderer>().color = status==BlockStatus.Preview ? Color.white : color;
+                child.gameObject.SetActive(true);
+                child.localPosition = blockPos[index];
+                index++;
+            }
         }
     }
 
@@ -225,4 +245,11 @@ public class EntityBlock : EntityLogic
     }
 
     #endregion
+}
+
+public enum BlockStatus
+{
+    Normal,
+    Preview,
+    Next
 }

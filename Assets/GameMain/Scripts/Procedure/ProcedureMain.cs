@@ -20,12 +20,17 @@ namespace BOO.Procedure
         public Vector2 originPos;
         public Vector2 pivot;
         public List<Vector2> originBlockPos;
+        public List<Vector2> nextBlockPos;
         public Color color;
+        public Color nextColor;
         public Sprite previewBlockSprite;
 
         private bool gameOver = false;
         private EntityBlock currentEntity;
         private EntityBlock previewEntity;
+        private EntityBlock nextEntity;
+        private int currentRow = 0;
+        private int nextRow = 0;
 
         protected override void OnInit(IFsm<IProcedureManager> procedureOwner)
         {
@@ -36,9 +41,10 @@ namespace BOO.Procedure
         protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
         {
             base.OnEnter(procedureOwner);
-            
-            
-            GameEntry.Resource.LoadAsset(AssetUtility.GetSpriteAsset("Block-Shadow@3x"),typeof(Sprite),new LoadAssetCallbacks(LoadAssetSuccess));
+
+
+            GameEntry.Resource.LoadAsset(AssetUtility.GetSpriteAsset("Block-Shadow@3x"), typeof(Sprite),
+                new LoadAssetCallbacks(LoadAssetSuccess));
             GameEntry.Event.Subscribe(SpawnBlockEventArgs.EventId, SpawnBlock);
             GameEntry.Event.Subscribe(GameOverEventArgs.EventId, GameOverEvent);
             GameEntry.Event.Subscribe(UpdatePreviewBlockEventArgs.EventId, UpdatePreviewBlockInfo);
@@ -91,26 +97,40 @@ namespace BOO.Procedure
         {
             if (previewEntity != null)
             {
-                if(previewEntity.isActiveAndEnabled)
+                if (previewEntity.isActiveAndEnabled)
                     GameEntry.Entity.HideEntity(previewEntity.Entity);
+            }
+            if (nextEntity != null)
+            {
+                if (nextEntity.isActiveAndEnabled)
+                    GameEntry.Entity.HideEntity(nextEntity.Entity);
             }
 
             IDataTable<DREntity> dtEntity = GameEntry.DataTable.GetDataTable<DREntity>();
-            DREntity drEntity = dtEntity.GetDataRow(Random.Range(1, 8));
-            originBlockPos = drEntity.SingleBlockPosition;
-            originPos = drEntity.OriginPosition;
-            pivot = drEntity.Pivot;
-            color = drEntity.Color;
+            currentRow = currentRow == 0 ? Random.Range(1, 8) : nextRow;
+            nextRow = Random.Range(1, 8);
+            DREntity drCurEntity = dtEntity.GetDataRow(currentRow);
+            DREntity drNextEntity = dtEntity.GetDataRow(nextRow);
+            originBlockPos = drCurEntity.SingleBlockPosition;
+            originPos = drCurEntity.OriginPosition;
+            pivot = drCurEntity.Pivot;
+            color = drCurEntity.Color;
+            nextColor = drNextEntity.Color;
+            nextBlockPos = drNextEntity.SingleBlockPosition;
             var current = await GameEntry.Entity.ShowEntityAsync(GameEntry.Entity.GenerateSerialID(),
                 typeof(EntityBlock),
-                AssetUtility.GetEntityAsset(drEntity.AssetName), drEntity.AssetGroup, userData: false);
+                AssetUtility.GetEntityAsset(drCurEntity.AssetName), drCurEntity.AssetGroup, userData: BlockStatus.Normal);
             var preview = await GameEntry.Entity.ShowEntityAsync(GameEntry.Entity.GenerateSerialID(),
                 typeof(EntityBlock),
-                AssetUtility.GetEntityAsset(drEntity.AssetName), drEntity.AssetGroup, userData: true);
+                AssetUtility.GetEntityAsset(drCurEntity.AssetName), drCurEntity.AssetGroup, userData: BlockStatus.Preview);
+            var next = await GameEntry.Entity.ShowEntityAsync(GameEntry.Entity.GenerateSerialID(),
+                typeof(EntityBlock),
+                AssetUtility.GetEntityAsset(drNextEntity.AssetName), drNextEntity.AssetGroup, userData: BlockStatus.Next);
             currentEntity = current.Logic as EntityBlock;
             previewEntity = preview.Logic as EntityBlock;
+            nextEntity = next.Logic as EntityBlock;
             GameEntry.Event.Fire(this, UpdatePreviewBlockEventArgs.Create());
-            
+
             if (!currentEntity.IsBlockInArea())
             {
                 GameEntry.Event.Fire(this, GameOverEventArgs.Create());
