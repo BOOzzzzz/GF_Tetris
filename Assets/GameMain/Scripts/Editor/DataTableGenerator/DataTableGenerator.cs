@@ -168,7 +168,13 @@ namespace ShootingStar.Editor.DataTableTools
                 }
                 else
                 {
-                    stringBuilder.AppendFormat("            {0} = DataTableExtension.Parse{1}(columnStrings[index++]);", dataTableProcessor.GetName(i), dataTableProcessor.GetType(i).Name).AppendLine();
+                    if(dataTableProcessor.GetLanguageKeyword(i) == "List<Vector2>")
+                        
+                        stringBuilder.AppendFormat("            {0} = DataTableExtension.Parse{1}(columnStrings[index++]);", dataTableProcessor.GetName(i), "ListVector2").AppendLine();
+                    else
+                        stringBuilder.AppendFormat("            {0} = DataTableExtension.Parse{1}(columnStrings[index++]);", dataTableProcessor.GetName(i), dataTableProcessor.GetType(i).Name).AppendLine();
+                    
+                    
                 }
             }
 
@@ -206,7 +212,11 @@ namespace ShootingStar.Editor.DataTableTools
                 }
                 else
                 {
-                    stringBuilder.AppendFormat("                    {0} = binaryReader.Read{1}();", dataTableProcessor.GetName(i), dataTableProcessor.GetType(i).Name).AppendLine();
+                    if(dataTableProcessor.GetLanguageKeyword(i) == "List<Vector2>")
+                        
+                        stringBuilder.AppendFormat("                    {0} = binaryReader.Read{1}();", dataTableProcessor.GetName(i), "ListVector2").AppendLine();
+                    else
+                        stringBuilder.AppendFormat("                    {0} = binaryReader.Read{1}();", dataTableProcessor.GetName(i), dataTableProcessor.GetType(i).Name).AppendLine();
                 }
             }
 

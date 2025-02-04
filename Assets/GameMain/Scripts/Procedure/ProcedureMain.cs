@@ -1,4 +1,5 @@
-﻿using GameFramework.DataTable;
+﻿using System.Collections.Generic;
+using GameFramework.DataTable;
 using GameFramework.Event;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
@@ -16,8 +17,9 @@ namespace BOO.Procedure
         public int height = 20;
         public Transform[,] grid;
 
-        public Vector2 originPosition;
+        public Vector2 originPos;
         public Vector2 pivot;
+        public List<Vector2> originBlockPos;
         public Color color;
         public Sprite previewBlockSprite;
 
@@ -95,7 +97,8 @@ namespace BOO.Procedure
 
             IDataTable<DREntity> dtEntity = GameEntry.DataTable.GetDataTable<DREntity>();
             DREntity drEntity = dtEntity.GetDataRow(Random.Range(1, 8));
-            originPosition = drEntity.OriginPosition;
+            originBlockPos = drEntity.SingleBlockPosition;
+            originPos = drEntity.OriginPosition;
             pivot = drEntity.Pivot;
             color = drEntity.Color;
             var current = await GameEntry.Entity.ShowEntityAsync(GameEntry.Entity.GenerateSerialID(),
@@ -107,6 +110,14 @@ namespace BOO.Procedure
             currentEntity = current.Logic as EntityBlock;
             previewEntity = preview.Logic as EntityBlock;
             GameEntry.Event.Fire(this, UpdatePreviewBlockEventArgs.Create());
+            
+            if (!currentEntity.IsBlockInArea())
+            {
+                GameEntry.Event.Fire(this, GameOverEventArgs.Create());
+                GameEntry.Entity.HideEntity(currentEntity.Entity);
+                GameEntry.Entity.HideEntity(previewEntity.Entity);
+                currentEntity.isLocked = true;
+            }
         }
 
         public void ClearTheRows(int min, int max)

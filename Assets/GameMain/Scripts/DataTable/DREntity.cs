@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2025-01-26 16:00:22.230
+// 生成时间：2025-02-04 21:06:04.579
 //------------------------------------------------------------
 
 using GameFramework;
@@ -81,6 +81,15 @@ namespace BOO
             private set;
         }
 
+        /// <summary>
+        /// 获取每个方块位置。
+        /// </summary>
+        public List<Vector2> SingleBlockPosition
+        {
+            get;
+            private set;
+        }
+
         public override bool ParseDataRow(string dataRowString, object userData)
         {
             string[] columnStrings = dataRowString.Split(DataTableExtension.DataSplitSeparators);
@@ -98,6 +107,7 @@ namespace BOO
             OriginPosition = DataTableExtension.ParseVector2(columnStrings[index++]);
             Pivot = DataTableExtension.ParseVector2(columnStrings[index++]);
             Color = DataTableExtension.ParseColor(columnStrings[index++]);
+            SingleBlockPosition = DataTableExtension.ParseListVector2(columnStrings[index++]);
 
             GeneratePropertyArray();
             return true;
@@ -115,6 +125,7 @@ namespace BOO
                     OriginPosition = binaryReader.ReadVector2();
                     Pivot = binaryReader.ReadVector2();
                     Color = binaryReader.ReadColor();
+                    SingleBlockPosition = binaryReader.ReadListVector2();
                 }
             }
 

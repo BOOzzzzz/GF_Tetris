@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using GameFramework.DataTable;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -28,5 +29,18 @@ public static class DataTableExtension
     {
         string[] splitedValue = value.Split(',');
         return new Color(float.Parse(splitedValue[0]), float.Parse(splitedValue[1]), float.Parse(splitedValue[2]), float.Parse(splitedValue[3]));
+    }
+
+    public static List<Vector2> ParseListVector2(string value)
+    {
+        List<Vector2> listV2 = new List<Vector2>();
+        string[] splitedValue = value.Split(';');
+        foreach (var t in splitedValue)
+        {
+            string[] splitedVector2 = t.Trim().Split(',');
+            listV2.Add(new Vector2(float.Parse(splitedVector2[0]), float.Parse(splitedVector2[1])));
+        }
+
+        return listV2;
     }
 }

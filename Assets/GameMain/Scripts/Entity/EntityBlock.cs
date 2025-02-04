@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using BOO;
 using BOO.Procedure;
 using GameMain.Scripts.Event;
@@ -10,7 +11,8 @@ public class EntityBlock : EntityLogic
 {
     private float fallTime = 1.0f;
     private float timer = 0.0f;
-    private bool isLocked;
+
+    public bool isLocked;
 
     private Vector3 originPosition;
     private Vector3 pivot;
@@ -18,18 +20,19 @@ public class EntityBlock : EntityLogic
     private Color color;
     private Sprite originalSprite;
     private string originalName;
+    private List<Vector2> blockPos;
 
     private ProcedureMain procedureMain;
-    
+
     //Property
     public bool IsLocked => isLocked;
 
     protected override void OnInit(object userData)
     {
         base.OnInit(userData);
-        
+
         originalSprite = GetComponentInChildren<SpriteRenderer>().sprite;
-        originalName = name.Substring(0,7);
+        originalName = name.Substring(0, 5);
     }
 
     protected override void OnShow(object userData)
@@ -38,44 +41,36 @@ public class EntityBlock : EntityLogic
 
         name = originalName + " - " + EntityExtension.serialID;
         isPreviewBlock = (bool)userData;
-        
+
         procedureMain = GameEntry.Procedure.CurrentProcedure as ProcedureMain;
-        
+
         if (isPreviewBlock)
         {
-            foreach (Transform child in transform)
-            {
-                child.GetComponent<SpriteRenderer>().sprite = procedureMain.previewBlockSprite;
-                child.GetComponent<SpriteRenderer>().color = Color.white;
-            }
             isLocked = true;
         }
         else
         {
             timer = 0;
             fallTime = 1;
-            
-            CachedTransform.position = procedureMain.originPosition;
+
+            CachedTransform.position = procedureMain.originPos;
             CachedTransform.rotation = Quaternion.identity;
             pivot = procedureMain.pivot;
             color = procedureMain.color;
-            
-            if (!IsBlockInArea())
-            {
-                GameEntry.Event.Fire(this, GameOverEventArgs.Create());
-                GameEntry.Entity.HideEntity(Entity);
-                isLocked = true;
-            }
-            else
-            {
-                isLocked = false;
-            }
 
-            foreach (Transform child in transform)
-            {
-                child.GetComponent<SpriteRenderer>().sprite = originalSprite;
-                child.GetComponent<SpriteRenderer>().color = color;
-            }
+            isLocked = false;
+        }
+
+        blockPos = procedureMain.originBlockPos;
+        int index = 0;
+        foreach (Transform child in transform)
+        {
+            child.GetComponent<SpriteRenderer>().sprite =
+                isPreviewBlock ? procedureMain.previewBlockSprite : originalSprite;
+            child.GetComponent<SpriteRenderer>().color = isPreviewBlock ? Color.white : color;
+            child.gameObject.SetActive(true);
+            child.localPosition = blockPos[index];
+            index++;
         }
     }
 
@@ -91,7 +86,8 @@ public class EntityBlock : EntityLogic
             {
                 CachedTransform.position -= Vector3.left;
             }
-            GameEntry.Event.Fire(this,UpdatePreviewBlockEventArgs.Create());
+
+            GameEntry.Event.Fire(this, UpdatePreviewBlockEventArgs.Create());
         }
 
         if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
@@ -101,7 +97,8 @@ public class EntityBlock : EntityLogic
             {
                 CachedTransform.position -= Vector3.right;
             }
-            GameEntry.Event.Fire(this,UpdatePreviewBlockEventArgs.Create());
+
+            GameEntry.Event.Fire(this, UpdatePreviewBlockEventArgs.Create());
         }
 
         timer += elapseSeconds;
@@ -116,7 +113,7 @@ public class EntityBlock : EntityLogic
                     procedureMain.ClearTheRows(min, max);
                     GameEntry.Event.Fire(this, SpawnBlockEventArgs.Create());
                     isLocked = true;
-                }),BlockRange().Item1, BlockRange().Item2);
+                }), BlockRange().Item1, BlockRange().Item2);
             }
 
             timer = 0;
@@ -126,12 +123,13 @@ public class EntityBlock : EntityLogic
 
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
-            CachedTransform.RotateAround(CachedTransform.TransformPoint(pivot),Vector3.forward, 90);
+            CachedTransform.RotateAround(CachedTransform.TransformPoint(pivot), Vector3.forward, 90);
             if (!IsBlockInArea())
             {
                 CachedTransform.RotateAround(CachedTransform.TransformPoint(pivot), Vector3.forward, -90);
             }
-            GameEntry.Event.Fire(this,UpdatePreviewBlockEventArgs.Create());
+
+            GameEntry.Event.Fire(this, UpdatePreviewBlockEventArgs.Create());
         }
     }
 
@@ -144,10 +142,11 @@ public class EntityBlock : EntityLogic
         {
             index--;
         }
-        return new Vector3(0,index,0);
+
+        return new Vector3(0, index, 0);
     }
 
-    private bool IsBlockInArea()
+    public bool IsBlockInArea()
     {
         foreach (Transform child in transform)
         {
@@ -162,8 +161,8 @@ public class EntityBlock : EntityLogic
 
         return true;
     }
-    
-    private bool IsBlockInArea(int addY)
+
+    public bool IsBlockInArea(int addY)
     {
         foreach (Transform child in transform)
         {
@@ -179,7 +178,7 @@ public class EntityBlock : EntityLogic
         return true;
     }
 
-    private void AddBlockToGrid(Action<int,int> onComplete,int min,int max)
+    private void AddBlockToGrid(Action<int, int> onComplete, int min, int max)
     {
         foreach (Transform child in transform)
         {
@@ -187,9 +186,10 @@ public class EntityBlock : EntityLogic
             var y = Mathf.RoundToInt(child.position.y);
             procedureMain.grid[x, y] = child;
         }
-        onComplete?.Invoke(min,max);
+
+        onComplete?.Invoke(min, max);
     }
-    
+
     private Tuple<int, int> BlockRange()
     {
         int yMax = Int32.MinValue;
@@ -207,17 +207,18 @@ public class EntityBlock : EntityLogic
             {
                 yMin = y;
             }
+
             procedureMain.grid[x, y] = child;
         }
-        
-        return Tuple.Create(yMin, yMax); 
+
+        return Tuple.Create(yMin, yMax);
     }
 
     #endregion
 
     #region PreviewBlock
 
-    public void SetPreviewBlockInfo(Vector3 position,Quaternion rotation)
+    public void SetPreviewBlockInfo(Vector3 position, Quaternion rotation)
     {
         CachedTransform.position = position;
         CachedTransform.rotation = rotation;
