@@ -13,7 +13,7 @@ namespace GameMain.Scripts.Event
         
         public static SpawnBlockEventArgs Create(object userData = null)
         {
-            SpawnBlockEventArgs spawnBlockEventArgs = new SpawnBlockEventArgs();
+            SpawnBlockEventArgs spawnBlockEventArgs = ReferencePool.Acquire<SpawnBlockEventArgs>();
             return spawnBlockEventArgs;
         }
 

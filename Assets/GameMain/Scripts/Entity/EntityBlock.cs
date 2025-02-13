@@ -16,7 +16,7 @@ public class EntityBlock : EntityLogic
 
     private Vector3 originPosition;
     private Vector3 pivot;
-    private BlockStatus status;
+    public BlockStatus status;
     private Color color;
     private Sprite originalSprite;
     private string originalName;
@@ -63,7 +63,7 @@ public class EntityBlock : EntityLogic
                 break;
             case BlockStatus.Next:
                 isLocked = true;
-                nextBlockPos = procedureMain.nextBlockPos;
+                nextBlockPos = procedureMain.nextSingleBlockPos;
                 int i = 0;
                 foreach (Transform child in transform)
                 {
@@ -74,7 +74,7 @@ public class EntityBlock : EntityLogic
                     i++;
                 }
 
-                CachedTransform.position = new Vector3(13, 12, 0);
+                CachedTransform.position = procedureMain.nextBlockPos;
                 break;
         }
 

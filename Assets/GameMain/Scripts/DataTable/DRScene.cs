@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2025-02-13 15:00:14.988
+// 生成时间：2025-02-13 15:00:15.010
 //------------------------------------------------------------
 
 using GameFramework;
@@ -19,9 +19,9 @@ using UnityGameFramework.Runtime;
 namespace BOO
 {
     /// <summary>
-    /// 方块表。
+    /// 场景表。
     /// </summary>
-    public class DREntity : DataRowBase
+    public class DRScene : DataRowBase
     {
         private int m_Id = 0;
 
@@ -45,60 +45,6 @@ namespace BOO
             private set;
         }
 
-        /// <summary>
-        /// 获取资源组。
-        /// </summary>
-        public string AssetGroup
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取起始位置。
-        /// </summary>
-        public Vector2 OriginPosition
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取旋转中心点。
-        /// </summary>
-        public Vector2 Pivot
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取颜色。
-        /// </summary>
-        public Color Color
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取每个方块位置。
-        /// </summary>
-        public List<Vector2> SingleBlockPosition
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取下一个方块位置。
-        /// </summary>
-        public Vector3 NextBlockPosition
-        {
-            get;
-            private set;
-        }
-
         public override bool ParseDataRow(string dataRowString, object userData)
         {
             string[] columnStrings = dataRowString.Split(DataTableExtension.DataSplitSeparators);
@@ -112,13 +58,6 @@ namespace BOO
             m_Id = int.Parse(columnStrings[index++]);
             index++;
             AssetName = columnStrings[index++];
-            AssetGroup = columnStrings[index++];
-            OriginPosition = DataTableExtension.ParseVector2(columnStrings[index++]);
-            Pivot = DataTableExtension.ParseVector2(columnStrings[index++]);
-            Color = DataTableExtension.ParseColor(columnStrings[index++]);
-            SingleBlockPosition = DataTableExtension.ParseListVector2(columnStrings[index++]);
-            index++;
-            NextBlockPosition = DataTableExtension.ParseVector3(columnStrings[index++]);
 
             GeneratePropertyArray();
             return true;
@@ -132,12 +71,6 @@ namespace BOO
                 {
                     m_Id = binaryReader.Read7BitEncodedInt32();
                     AssetName = binaryReader.ReadString();
-                    AssetGroup = binaryReader.ReadString();
-                    OriginPosition = binaryReader.ReadVector2();
-                    Pivot = binaryReader.ReadVector2();
-                    Color = binaryReader.ReadColor();
-                    SingleBlockPosition = binaryReader.ReadListVector2();
-                    NextBlockPosition = binaryReader.ReadVector3();
                 }
             }
 

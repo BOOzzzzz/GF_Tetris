@@ -18,9 +18,10 @@ namespace BOO.Procedure
         public Transform[,] grid;
 
         public Vector2 originPos;
+        public Vector2 nextBlockPos;
         public Vector2 pivot;
         public List<Vector2> originBlockPos;
-        public List<Vector2> nextBlockPos;
+        public List<Vector2> nextSingleBlockPos;
         public Color color;
         public Color nextColor;
         public Sprite previewBlockSprite;
@@ -32,6 +33,9 @@ namespace BOO.Procedure
         private int currentRow = 0;
         private int nextRow = 0;
 
+        private int scoreIndex = 0;
+        private readonly int scoreWeight = 10;
+
         protected override void OnInit(IFsm<IProcedureManager> procedureOwner)
         {
             base.OnInit(procedureOwner);
@@ -41,8 +45,8 @@ namespace BOO.Procedure
         protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
         {
             base.OnEnter(procedureOwner);
-
-
+            
+            GameEntry.UI.OpenUIForm(AssetUtility.GetUIFormAsset("UIFormMain"), "Main");
             GameEntry.Resource.LoadAsset(AssetUtility.GetSpriteAsset("Block-Shadow@3x"), typeof(Sprite),
                 new LoadAssetCallbacks(LoadAssetSuccess));
             GameEntry.Event.Subscribe(SpawnBlockEventArgs.EventId, SpawnBlock);
@@ -50,6 +54,9 @@ namespace BOO.Procedure
             GameEntry.Event.Subscribe(UpdatePreviewBlockEventArgs.EventId, UpdatePreviewBlockInfo);
             AwaitableExtensions.SubscribeEvent();
             GameEntry.Event.Fire(this, SpawnBlockEventArgs.Create());
+            
+            scoreIndex = 0;
+            GameEntry.Event.Fire(this, UpdateScoreEventArgs.Create(scoreIndex * scoreWeight));
         }
 
         private void LoadAssetSuccess(string assetname, object asset, float duration, object userdata)
@@ -116,26 +123,29 @@ namespace BOO.Procedure
             pivot = drCurEntity.Pivot;
             color = drCurEntity.Color;
             nextColor = drNextEntity.Color;
-            nextBlockPos = drNextEntity.SingleBlockPosition;
+            nextSingleBlockPos = drNextEntity.SingleBlockPosition;
+            nextBlockPos = drNextEntity.NextBlockPosition;
             var current = await GameEntry.Entity.ShowEntityAsync(GameEntry.Entity.GenerateSerialID(),
                 typeof(EntityBlock),
                 AssetUtility.GetEntityAsset(drCurEntity.AssetName), drCurEntity.AssetGroup, userData: BlockStatus.Normal);
             var preview = await GameEntry.Entity.ShowEntityAsync(GameEntry.Entity.GenerateSerialID(),
                 typeof(EntityBlock),
                 AssetUtility.GetEntityAsset(drCurEntity.AssetName), drCurEntity.AssetGroup, userData: BlockStatus.Preview);
+            currentEntity = current.Logic as EntityBlock;
+            previewEntity = preview.Logic as EntityBlock;
+            GameEntry.Event.Fire(this, UpdatePreviewBlockEventArgs.Create());
+            
             var next = await GameEntry.Entity.ShowEntityAsync(GameEntry.Entity.GenerateSerialID(),
                 typeof(EntityBlock),
                 AssetUtility.GetEntityAsset(drNextEntity.AssetName), drNextEntity.AssetGroup, userData: BlockStatus.Next);
-            currentEntity = current.Logic as EntityBlock;
-            previewEntity = preview.Logic as EntityBlock;
             nextEntity = next.Logic as EntityBlock;
-            GameEntry.Event.Fire(this, UpdatePreviewBlockEventArgs.Create());
 
             if (!currentEntity.IsBlockInArea())
             {
                 GameEntry.Event.Fire(this, GameOverEventArgs.Create());
                 GameEntry.Entity.HideEntity(currentEntity.Entity);
                 GameEntry.Entity.HideEntity(previewEntity.Entity);
+                GameEntry.Entity.HideEntity(nextEntity.Entity);
                 currentEntity.isLocked = true;
             }
         }
@@ -165,6 +175,8 @@ namespace BOO.Procedure
 
         private void DeleteLine(int line)
         {
+            scoreIndex++;
+            GameEntry.Event.Fire(this,UpdateScoreEventArgs.Create(scoreIndex * scoreWeight));
             for (int i = 0; i < width; i++)
             {
                 grid[i, line].gameObject.SetActive(false);

@@ -1,5 +1,6 @@
 ﻿using GameFramework.Fsm;
 using GameFramework.Procedure;
+using UnityGameFramework.Runtime;
 
 namespace BOO.Procedure
 {
@@ -19,21 +20,9 @@ namespace BOO.Procedure
             if (startGame)
             {
                 startGame = false;
-                string[] loadedSceneAssetNames = GameEntry.Scene.GetLoadedSceneAssetNames();
-                for (int i = 0; i < loadedSceneAssetNames.Length; i++)
-                {
-                    GameEntry.Scene.UnloadScene(loadedSceneAssetNames[i]);
-                }
                 
-                // 隐藏所有实体
-                GameEntry.Entity.HideAllLoadingEntities();
-                GameEntry.Entity.HideAllLoadedEntities();
-                
-                GameEntry.UI.CloseAllLoadedUIForms();
-                
-                GameEntry.UI.OpenUIForm(AssetUtility.GetUIFormAsset("UIFormMain"), "Main");
-                GameEntry.Scene.LoadScene(AssetUtility.GetSceneAsset("GameMain"));
-                ChangeState<ProcedureMain>(procedureOwner);
+                procedureOwner.SetData<VarInt32>("NextSceneId",2);
+                ChangeState<ProcedureChangeScene>(procedureOwner);
             }
         }
     }

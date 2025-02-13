@@ -13,7 +13,7 @@ namespace GameMain.Scripts.Event
         
         public static GameOverEventArgs Create(object userData = null)
         {
-            GameOverEventArgs gameOverEventArgs = new GameOverEventArgs();
+            GameOverEventArgs gameOverEventArgs = ReferencePool.Acquire<GameOverEventArgs>();
             return gameOverEventArgs;
         }
 

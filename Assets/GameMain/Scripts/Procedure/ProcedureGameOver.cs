@@ -9,14 +9,12 @@ namespace BOO.Procedure
     {
 
         private bool restartGame = false; 
-        private bool unloadedScene = false; 
+        private bool backMenu = false; 
         protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
         {
             base.OnEnter(procedureOwner);
             
             GameEntry.UI.OpenUIForm(AssetUtility.GetUIFormAsset("UIFormGameOver"), "GameOver",userData:this);
-            GameEntry.Event.Subscribe(UnloadSceneSuccessEventArgs.EventId,UnloadSceneSuccess);
-            GameEntry.Event.Subscribe(UnloadSceneFailureEventArgs.EventId,UnloadSceneFailure);
         }
 
         protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
@@ -26,51 +24,29 @@ namespace BOO.Procedure
             if (restartGame)
             {
                 restartGame = false;
-                string[] loadedSceneAssetNames = GameEntry.Scene.GetLoadedSceneAssetNames();
-                for (int i = 0; i < loadedSceneAssetNames.Length; i++)
-                {
-                    GameEntry.Scene.UnloadScene(loadedSceneAssetNames[i]);
-                }
                 
-                // 隐藏所有实体
-                GameEntry.Entity.HideAllLoadingEntities();
-                GameEntry.Entity.HideAllLoadedEntities();
-                
-                GameEntry.UI.CloseAllLoadedUIForms();
-                
-                GameEntry.UI.OpenUIForm(AssetUtility.GetUIFormAsset("UIFormMain"), "Main");
+                procedureOwner.SetData<VarInt32>("NextSceneId",2);
+                ChangeState<ProcedureChangeScene>(procedureOwner);
             }
-
-            if (unloadedScene)
+            
+            if (backMenu)
             {
-                unloadedScene = false;
-                GameEntry.Scene.LoadScene(AssetUtility.GetSceneAsset("GameMain"));
-                ChangeState<ProcedureMain>(procedureOwner);
+                backMenu = false;
+                
+                procedureOwner.SetData<VarInt32>("NextSceneId",1);
+                ChangeState<ProcedureChangeScene>(procedureOwner);
             }
         }
 
-        protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
-        {
-            base.OnLeave(procedureOwner, isShutdown);
-            
-            
-            GameEntry.Event.Unsubscribe(UnloadSceneSuccessEventArgs.EventId,UnloadSceneSuccess);
-            GameEntry.Event.Unsubscribe(UnloadSceneFailureEventArgs.EventId,UnloadSceneFailure);
-        }
-
-        private void UnloadSceneFailure(object sender, GameEventArgs e)
-        {
-            
-        }
-
-        private void UnloadSceneSuccess(object sender, GameEventArgs e)
-        {
-            unloadedScene = true;
-        }
 
         public void RestartGame()
         {
             restartGame = true;
+        }
+        
+        public void BackMenu()
+        {
+            backMenu = true;
         }
     }
 }

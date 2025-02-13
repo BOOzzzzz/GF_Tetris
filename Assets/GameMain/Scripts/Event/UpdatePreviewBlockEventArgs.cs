@@ -13,7 +13,7 @@ namespace GameMain.Scripts.Event
         
         public static UpdatePreviewBlockEventArgs Create(object userData = null)
         {
-            UpdatePreviewBlockEventArgs updatePreviewBlockEventArgs = new UpdatePreviewBlockEventArgs();
+            UpdatePreviewBlockEventArgs updatePreviewBlockEventArgs = ReferencePool.Acquire<UpdatePreviewBlockEventArgs>();
             return updatePreviewBlockEventArgs;
         }
 

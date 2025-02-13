@@ -12,6 +12,7 @@ using GameEntry = BOO.GameEntry;
 public class UIFormGameOverLogic : UIFormLogicEx
 {
     public Button btnTryAgain;
+    public Button btnMenu;
     public Button btnQuit;
 
     private ProcedureGameOver procedureGameOver;
@@ -24,6 +25,11 @@ public class UIFormGameOverLogic : UIFormLogicEx
         btnTryAgain.onClick.AddListener((() =>
         {
             procedureGameOver.RestartGame();
+        }));
+        
+        btnMenu.onClick.AddListener((() =>
+        {
+            procedureGameOver.BackMenu();
         }));
         
         btnQuit.onClick.AddListener((() =>

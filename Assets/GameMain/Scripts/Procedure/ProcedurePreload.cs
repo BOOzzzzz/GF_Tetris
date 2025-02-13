@@ -14,7 +14,8 @@ namespace BOO.Procedure
     {
         public static readonly string[] DataTableNames = new string[]
         {
-            "Entity"
+            "Entity",
+            "Scene"
         };
 
         private Dictionary<string, bool> m_LoadedFlag = new Dictionary<string, bool>();
@@ -51,8 +52,8 @@ namespace BOO.Procedure
                 }
             }
 
-            ChangeState<ProcedureMenu>(procedureOwner);
-            GameEntry.Scene.LoadScene(AssetUtility.GetSceneAsset("GameMenu"));
+            procedureOwner.SetData<VarInt32>("NextSceneId",1);
+            ChangeState<ProcedureChangeScene>(procedureOwner);
         }
 
         private void PreloadResources()
