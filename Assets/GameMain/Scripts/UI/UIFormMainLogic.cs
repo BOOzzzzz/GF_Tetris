@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using BOO;
+using BOO.Procedure;
 using GameFramework.Event;
 using GameMain.Scripts.Event;
 using GameMain.Scripts.UI;
@@ -12,8 +13,20 @@ public class UIFormMainLogic : UIFormLogicEx
 {
     public TMP_Text  tmp;
     public Image fadeBackground;
+    public Button btnPause;
     
     private float fadeDuration = 1f;
+    private ProcedureMain procedureMain;
+
+    protected override void OnInit(object userData)
+    {
+        base.OnInit(userData);
+        procedureMain   = (ProcedureMain)userData;
+        btnPause.onClick.AddListener((() =>
+        {
+            procedureMain.OnPause();
+        }));
+    }
 
     protected override void OnOpen(object userData)
     {

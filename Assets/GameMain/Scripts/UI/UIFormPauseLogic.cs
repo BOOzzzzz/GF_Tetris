@@ -5,31 +5,33 @@ using BOO;
 using BOO.Procedure;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 using GameEntry = BOO.GameEntry;
 
-public class UIFormMenuLogic : UIFormLogicEx
+public class UIFormPauseLogic : UIFormLogicEx
 {
-    public Button btnStart;
-    public Button btnOption;
+    public Button btnResume;
+    public Button btnMenu;
     public Button btnQuit;
 
-    private ProcedureMenu procedureMenu;
+    private ProcedureMain procedureMain;
 
     protected override void OnInit(object userData)
     {
         base.OnInit(userData);
         
-        procedureMenu = (ProcedureMenu)userData;
-        btnStart.onClick.AddListener((() =>
+        procedureMain = userData as ProcedureMain;
+        btnResume.onClick.AddListener((() =>
         {
-            procedureMenu.startGame = true;
+            GameEntry.Base.GameSpeed = 1;
+            GameEntry.UI.CloseUIForm(UIForm);
         }));
         
-        btnOption.onClick.AddListener((() =>
+        btnMenu.onClick.AddListener((() =>
         {
-            
+            procedureMain.BackMenu();
         }));
         
         btnQuit.onClick.AddListener((() =>

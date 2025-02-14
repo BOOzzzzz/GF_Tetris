@@ -58,6 +58,8 @@ namespace BOO.Procedure
 
         private void PreloadResources()
         {
+            PlayerInputManager.Instance.OnInit();
+            
             LoadDataTable();
             
             //GameEntry.Resource.InitResources(InitResourcesComplete);
