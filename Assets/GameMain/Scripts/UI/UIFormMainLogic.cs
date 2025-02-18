@@ -14,6 +14,9 @@ public class UIFormMainLogic : UIFormLogicEx
     public TMP_Text  tmp;
     public Image fadeBackground;
     public Button btnPause;
+    public Button btnLeft;
+    public Button btnRight;
+    public Button btnRotate;
     
     private float fadeDuration = 1f;
     private ProcedureMain procedureMain;
@@ -21,10 +24,25 @@ public class UIFormMainLogic : UIFormLogicEx
     protected override void OnInit(object userData)
     {
         base.OnInit(userData);
-        procedureMain   = (ProcedureMain)userData;
+        procedureMain  = (ProcedureMain)userData;
         btnPause.onClick.AddListener((() =>
         {
             procedureMain.OnPause();
+        }));
+        
+        btnLeft.onClick.AddListener((() =>
+        {
+            procedureMain.OnLeft();
+        }));
+        
+        btnRight.onClick.AddListener((() =>
+        {
+            procedureMain.OnRight();
+        }));
+        
+        btnRotate.onClick.AddListener((() =>
+        {
+            procedureMain.OnRotate();
         }));
     }
 

@@ -273,12 +273,12 @@ namespace BOO.Procedure
         }
 
 
-        private void OnStopDown()
+        public void OnStopDown()
         {
             fallTime = 1f;
         }
 
-        private void OnRight()
+        public void OnRight()
         {
             currentEntity.CachedTransform.position += Vector3.right;
             if (!currentEntity.IsBlockInArea())
@@ -290,7 +290,7 @@ namespace BOO.Procedure
             GameEntry.Event.Fire(this, UpdatePreviewBlockEventArgs.Create());
         }
 
-        private void OnLeft()
+        public void OnLeft()
         {
             currentEntity.CachedTransform.position += Vector3.left;
             if (!currentEntity.IsBlockInArea())
@@ -302,12 +302,12 @@ namespace BOO.Procedure
             GameEntry.Event.Fire(this, UpdatePreviewBlockEventArgs.Create());
         }
 
-        private void OnDown()
+        public void OnDown()
         {
             fallTime = 0.06f;
         }
 
-        private void OnRotate()
+        public void OnRotate()
         {
             currentEntity.CachedTransform.RotateAround(currentEntity.CachedTransform.TransformPoint(pivot),
                 Vector3.forward, 90);
