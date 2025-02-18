@@ -25,12 +25,14 @@ public class UIFormPauseLogic : UIFormLogicEx
         procedureMain = userData as ProcedureMain;
         btnResume.onClick.AddListener((() =>
         {
+            GameEntry.Sound.PlayUISound((int)EnumSound.Resume);
             GameEntry.Base.GameSpeed = 1;
             GameEntry.UI.CloseUIForm(UIForm);
         }));
         
         btnMenu.onClick.AddListener((() =>
         {
+            GameEntry.Sound.PlayUISound((int)EnumSound.NewGame);
             procedureMain.BackMenu();
         }));
         

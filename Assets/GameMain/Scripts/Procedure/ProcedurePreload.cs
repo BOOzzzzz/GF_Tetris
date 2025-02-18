@@ -12,12 +12,6 @@ namespace BOO.Procedure
 {
     public class ProcedurePreload : ProcedureBase
     {
-        public static readonly string[] DataTableNames = new string[]
-        {
-            "Entity",
-            "Scene"
-        };
-
         private Dictionary<string, bool> m_LoadedFlag = new Dictionary<string, bool>();
 
         protected override void OnEnter(ProcedureOwner procedureOwner)
@@ -67,7 +61,7 @@ namespace BOO.Procedure
 
         private void LoadDataTable()
         {
-            foreach (string dataTableName in DataTableNames)
+            foreach (string dataTableName in DataTableNameScanner.GetDataTableNames() )
             {
                 string dataTableAssetName = AssetUtility.GetDataTableAsset(dataTableName, false);
                 m_LoadedFlag.Add(dataTableAssetName, false);

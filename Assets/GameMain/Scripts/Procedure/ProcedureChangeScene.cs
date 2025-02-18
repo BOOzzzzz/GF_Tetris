@@ -12,25 +12,22 @@ namespace BOO.Procedure
     {
         private const int MenuSceneId = 1;
 
-        private bool m_ChangeToMenu = false;
-        private bool m_IsChangeSceneComplete = false;
+        private bool changeToMenu = false;
+        private bool isChangeSceneComplete = false;
+        private int musicID;
 
 
         protected override async void OnEnter(ProcedureOwner procedureOwner)
         {
             base.OnEnter(procedureOwner);
 
-            m_IsChangeSceneComplete = false;
+            isChangeSceneComplete = false;
 
             GameEntry.Event.Subscribe(LoadSceneSuccessEventArgs.EventId, OnLoadSceneSuccess);
             GameEntry.Event.Subscribe(LoadSceneFailureEventArgs.EventId, OnLoadSceneFailure);
             GameEntry.Event.Subscribe(LoadSceneUpdateEventArgs.EventId, OnLoadSceneUpdate);
             GameEntry.Event.Subscribe(LoadSceneDependencyAssetEventArgs.EventId, OnLoadSceneDependencyAsset);
             AwaitableExtensions.SubscribeEvent();
-
-            // 停止所有声音
-            GameEntry.Sound.StopAllLoadingSounds();
-            GameEntry.Sound.StopAllLoadedSounds();
 
             // 隐藏所有实体
             GameEntry.Entity.HideAllLoadingEntities();
@@ -49,9 +46,10 @@ namespace BOO.Procedure
             GameEntry.Base.ResetNormalGameSpeed();
 
             int sceneId = procedureOwner.GetData<VarInt32>("NextSceneId");
-            m_ChangeToMenu = sceneId == MenuSceneId;
+            changeToMenu = sceneId == MenuSceneId;
             IDataTable<DRScene> dtScene = GameEntry.DataTable.GetDataTable<DRScene>();
             DRScene drScene = dtScene.GetDataRow(sceneId);
+            musicID = drScene.BackgroundMusicId;
             if (drScene == null)
             {
                 Log.Warning("Can not load scene '{0}' from data table.", sceneId.ToString());
@@ -77,12 +75,12 @@ namespace BOO.Procedure
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
 
-            if (!m_IsChangeSceneComplete)
+            if (!isChangeSceneComplete)
             {
                 return;
             }
 
-            if (m_ChangeToMenu)
+            if (changeToMenu)
             {
                 ChangeState<ProcedureMenu>(procedureOwner);
             }
@@ -102,7 +100,9 @@ namespace BOO.Procedure
 
             Log.Info("Load scene '{0}' OK.", ne.SceneAssetName);
 
-            m_IsChangeSceneComplete = true;
+            GameEntry.Sound.PlayMusic(musicID);
+
+            isChangeSceneComplete = true;
         }
 
         private void OnLoadSceneFailure(object sender, GameEventArgs e)

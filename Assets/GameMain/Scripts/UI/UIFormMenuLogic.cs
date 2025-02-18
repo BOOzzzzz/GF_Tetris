@@ -24,11 +24,13 @@ public class UIFormMenuLogic : UIFormLogicEx
         procedureMenu = (ProcedureMenu)userData;
         btnStart.onClick.AddListener((() =>
         {
+            GameEntry.Sound.PlayUISound((int)EnumSound.NewGame);
             procedureMenu.startGame = true;
         }));
         
         btnOption.onClick.AddListener((() =>
         {
+            GameEntry.Sound.PlayUISound((int)EnumSound.NewGame);
             
         }));
         

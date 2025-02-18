@@ -23,7 +23,7 @@ namespace BOO
 
         public static string GetFontAsset(string assetName)
         {
-            return Utility.Text.Format("Assets/GameMain/Fonts/{0}.ttf", assetName);
+            return Utility.Text.Format("Assets/GameMain/Assets/Fonts/{0}.ttf", assetName);
         }
         
         public static string GetSpriteAsset(string assetName)
@@ -38,12 +38,12 @@ namespace BOO
 
         public static string GetMusicAsset(string assetName)
         {
-            return Utility.Text.Format("Assets/GameMain/Music/{0}.mp3", assetName);
+            return Utility.Text.Format("Assets/GameMain/Assets/Music/{0}.mp3", assetName);
         }
 
         public static string GetSoundAsset(string assetName)
         {
-            return Utility.Text.Format("Assets/GameMain/Sounds/{0}.wav", assetName);
+            return Utility.Text.Format("Assets/GameMain/Assets/Sounds/{0}.wav", assetName);
         }
 
         public static string GetEntityAsset(string assetName)
@@ -58,7 +58,7 @@ namespace BOO
 
         public static string GetUISoundAsset(string assetName)
         {
-            return Utility.Text.Format("Assets/GameMain/UI/UISounds/{0}.wav", assetName);
+            return Utility.Text.Format("Assets/GameMain/Assets/Sounds/{0}.wav", assetName);
         }
     }
 }

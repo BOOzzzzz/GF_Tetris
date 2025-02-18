@@ -31,7 +31,7 @@ namespace BOO.Procedure
         private bool gameOver = false;
         private bool backMenu;
         private int pauseID;
-        
+
         private EntityBlock currentEntity;
         private EntityBlock previewEntity;
         private EntityBlock nextEntity;
@@ -60,7 +60,7 @@ namespace BOO.Procedure
             PlayerInputManager.Instance.onCancelPause += OnCancelPause;
             PlayerInputManager.Instance.OnEnable();
 
-            GameEntry.UI.OpenUIForm(AssetUtility.GetUIFormAsset("UIFormMain"), "Main",this);
+            GameEntry.UI.OpenUIForm(AssetUtility.GetUIFormAsset("UIFormMain"), "Main", this);
             GameEntry.Resource.LoadAsset(AssetUtility.GetSpriteAsset("Block-Shadow@3x"), typeof(Sprite),
                 new LoadAssetCallbacks(LoadAssetSuccess));
             GameEntry.Event.Subscribe(SpawnBlockEventArgs.EventId, SpawnBlock);
@@ -83,12 +83,12 @@ namespace BOO.Procedure
                 gameOver = false;
                 ChangeState<ProcedureGameOver>(procedureOwner);
             }
-            
+
             if (backMenu)
             {
                 backMenu = false;
-                
-                procedureOwner.SetData<VarInt32>("NextSceneId",1);
+
+                procedureOwner.SetData<VarInt32>("NextSceneId", 1);
                 ChangeState<ProcedureChangeScene>(procedureOwner);
             }
 
@@ -109,6 +109,10 @@ namespace BOO.Procedure
                         GameEntry.Event.Fire(this, SpawnBlockEventArgs.Create());
                         currentEntity.isLocked = true;
                     }), currentEntity.BlockRange().Item1, currentEntity.BlockRange().Item2);
+                }
+                else
+                {
+                    GameEntry.Sound.PlaySound((int)EnumSound.Drop,currentEntity.Entity);
                 }
 
                 timer = 0;
@@ -282,6 +286,7 @@ namespace BOO.Procedure
                 currentEntity.CachedTransform.position -= Vector3.right;
             }
 
+            GameEntry.Sound.PlaySound((int)EnumSound.Move,currentEntity.Entity);
             GameEntry.Event.Fire(this, UpdatePreviewBlockEventArgs.Create());
         }
 
@@ -293,6 +298,7 @@ namespace BOO.Procedure
                 currentEntity.CachedTransform.position -= Vector3.left;
             }
 
+            GameEntry.Sound.PlaySound((int)EnumSound.Move,currentEntity.Entity);
             GameEntry.Event.Fire(this, UpdatePreviewBlockEventArgs.Create());
         }
 
@@ -311,19 +317,22 @@ namespace BOO.Procedure
                     Vector3.forward, -90);
             }
 
+            GameEntry.Sound.PlaySound((int)EnumSound.Rotate,currentEntity.Entity);
             GameEntry.Event.Fire(this, UpdatePreviewBlockEventArgs.Create());
         }
 
         public void OnPause()
         {
             GameEntry.Base.GameSpeed = 0;
-            pauseID = GameEntry.UI.OpenUIForm(AssetUtility.GetUIFormAsset("UIFormPause"), "Main",this);
+            pauseID = GameEntry.UI.OpenUIForm(AssetUtility.GetUIFormAsset("UIFormPause"), "Main", this);
+            GameEntry.Sound.PlayUISound((int)EnumSound.Pause);
         }
 
         private void OnCancelPause()
         {
             GameEntry.Base.GameSpeed = 1;
             GameEntry.UI.CloseUIForm(pauseID);
+            GameEntry.Sound.PlayUISound((int)EnumSound.Resume);
         }
 
         private void LoadAssetSuccess(string assetname, object asset, float duration, object userdata)

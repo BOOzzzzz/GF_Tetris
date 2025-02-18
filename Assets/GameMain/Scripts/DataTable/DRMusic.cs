@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2025-02-15 15:44:22.258
+// 生成时间：2025-02-15 15:44:22.255
 //------------------------------------------------------------
 
 using GameFramework;
@@ -19,9 +19,9 @@ using UnityGameFramework.Runtime;
 namespace BOO
 {
     /// <summary>
-    /// 场景表。
+    /// 音乐表。
     /// </summary>
-    public class DRScene : DataRowBase
+    public class DRMusic : DataRowBase
     {
         private int m_Id = 0;
 
@@ -45,15 +45,6 @@ namespace BOO
             private set;
         }
 
-        /// <summary>
-        /// 获取背景音乐id。
-        /// </summary>
-        public int BackgroundMusicId
-        {
-            get;
-            private set;
-        }
-
         public override bool ParseDataRow(string dataRowString, object userData)
         {
             string[] columnStrings = dataRowString.Split(DataTableExtension.DataSplitSeparators);
@@ -67,7 +58,6 @@ namespace BOO
             m_Id = int.Parse(columnStrings[index++]);
             index++;
             AssetName = columnStrings[index++];
-            BackgroundMusicId = int.Parse(columnStrings[index++]);
 
             GeneratePropertyArray();
             return true;
@@ -81,7 +71,6 @@ namespace BOO
                 {
                     m_Id = binaryReader.Read7BitEncodedInt32();
                     AssetName = binaryReader.ReadString();
-                    BackgroundMusicId = binaryReader.Read7BitEncodedInt32();
                 }
             }
 

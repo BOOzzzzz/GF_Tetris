@@ -24,11 +24,13 @@ public class UIFormGameOverLogic : UIFormLogicEx
         procedureGameOver = userData as ProcedureGameOver;
         btnTryAgain.onClick.AddListener((() =>
         {
+            GameEntry.Sound.PlayUISound((int)EnumSound.NewGame);
             procedureGameOver.RestartGame();
         }));
         
         btnMenu.onClick.AddListener((() =>
         {
+            GameEntry.Sound.PlayUISound((int)EnumSound.NewGame);
             procedureGameOver.BackMenu();
         }));
         
