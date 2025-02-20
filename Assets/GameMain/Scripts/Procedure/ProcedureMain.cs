@@ -47,7 +47,7 @@ namespace BOO.Procedure
             grid = new Transform[width, height];
         }
 
-        protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
+        protected async override void OnEnter(IFsm<IProcedureManager> procedureOwner)
         {
             base.OnEnter(procedureOwner);
 
@@ -60,15 +60,16 @@ namespace BOO.Procedure
             PlayerInputManager.Instance.onCancelPause += OnCancelPause;
             PlayerInputManager.Instance.OnEnable();
 
-            GameEntry.UI.OpenUIForm(AssetUtility.GetUIFormAsset("UIFormMain"), "Main", this);
             GameEntry.Resource.LoadAsset(AssetUtility.GetSpriteAsset("Block-Shadow@3x"), typeof(Sprite),
                 new LoadAssetCallbacks(LoadAssetSuccess));
+            
             GameEntry.Event.Subscribe(SpawnBlockEventArgs.EventId, SpawnBlock);
             GameEntry.Event.Subscribe(GameOverEventArgs.EventId, GameOverEvent);
             GameEntry.Event.Subscribe(UpdatePreviewBlockEventArgs.EventId, UpdatePreviewBlockInfo);
             AwaitableExtensions.SubscribeEvent();
+            
             GameEntry.Event.Fire(this, SpawnBlockEventArgs.Create());
-
+            await GameEntry.UI.OpenUIFormAsync(AssetUtility.GetUIFormAsset("UIFormMain"), "Main",0, false, this);
             scoreIndex = 0;
             GameEntry.Event.Fire(this, UpdateScoreEventArgs.Create(scoreIndex * scoreWeight));
         }

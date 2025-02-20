@@ -1,6 +1,8 @@
-﻿using GameFramework.DataTable;
+﻿using System;
+using GameFramework.DataTable;
 using GameFramework.Sound;
 using Unity.Burst.CompilerServices;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace BOO
@@ -75,6 +77,44 @@ namespace BOO
             playSoundParams.SpatialBlend = 0f;
             return soundComponent.PlaySound(AssetUtility.GetUISoundAsset(drSound.AssetName), "UISound", 0,
                 playSoundParams, userData);
+        }
+        
+        public static void SetVolume(this SoundComponent soundComponent, float volume, string soundGroupName,
+            object userData = null)
+        {
+            if (string.IsNullOrEmpty(soundGroupName))
+            {
+                Log.Error("Sound group is invalid.");
+                return;
+            }
+
+            ISoundGroup soundGroup = soundComponent.GetSoundGroup(soundGroupName);
+            if (soundGroup == null)
+            {
+                Log.Error("Sound group '{0}' is invalid.", soundGroupName);
+                return;
+            }
+
+            soundGroup.Volume = volume;
+        }
+        
+        public static float GetVolume(this SoundComponent soundComponent, string soundGroupName,
+            object userData = null)
+        {
+            if (string.IsNullOrEmpty(soundGroupName))
+            {
+                Log.Error("Sound group is invalid.");
+                return 0;
+            }
+
+            ISoundGroup soundGroup = soundComponent.GetSoundGroup(soundGroupName);
+            if (soundGroup == null)
+            {
+                Log.Error("Sound group '{0}' is invalid.", soundGroupName);
+                return 0;
+            }
+
+            return soundGroup.Volume;
         }
     }
 }

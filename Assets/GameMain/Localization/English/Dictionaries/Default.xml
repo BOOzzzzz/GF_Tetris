@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Dictionaries>
+  <Dictionary Language="English">
+    <String Key="Pause" Value="Pause" />
+    <String Key="Resume" Value="Resume" />
+    <String Key="Menu" Value="Menu" />
+    <String Key="Quit" Value="Quit" />
+    <String Key="Back" Value="Back" />
+    <String Key="Music" Value="Music" />
+    <String Key="Sound" Value="Sound" />
+    <String Key="Language" Value="Language" />
+    <String Key="Tetris" Value="Tetris" />
+    <String Key="Start" Value="Start" />
+    <String Key="Setting" Value="Setting" />
+    <String Key="NextBlock" Value="NextBlock" />
+    <String Key="Score" Value="Score" />
+    <String Key="GameOver" Value="GameOver" />
+    <String Key="TryAgain" Value="TryAgain" />
+    <String Key="Confirm" Value="Confirm" />
+    <String Key="You will need to restart the game after switching languages" Value="You will need to restart the game after switching languages" />
+    <String Key="ChineseTraditional" Value="ChineseTraditional" />
+    <String Key="ChineseSimplified" Value="ChineseSimplified" />
+    <String Key="English" Value="English" />
+  </Dictionary>
+</Dictionaries>

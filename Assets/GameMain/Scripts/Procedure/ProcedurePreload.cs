@@ -1,14 +1,14 @@
-﻿
-using GameFramework;
+﻿using GameFramework;
 using GameFramework.Event;
 using GameFramework.Resource;
 using System.Collections.Generic;
+using GameFramework.Localization;
 using GameFramework.Procedure;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using ProcedureOwner = GameFramework.Fsm.IFsm<GameFramework.Procedure.IProcedureManager>;
 
-namespace BOO.Procedure 
+namespace BOO.Procedure
 {
     public class ProcedurePreload : ProcedureBase
     {
@@ -20,6 +20,8 @@ namespace BOO.Procedure
 
             GameEntry.Event.Subscribe(LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSuccess);
             GameEntry.Event.Subscribe(LoadDataTableFailureEventArgs.EventId, OnLoadDataTableFailure);
+            GameEntry.Event.Subscribe(LoadDictionarySuccessEventArgs.EventId, OnLoadDictionarySuccess);
+            GameEntry.Event.Subscribe(LoadDictionaryFailureEventArgs.EventId, OnLoadDictionaryFailure);
 
             m_LoadedFlag.Clear();
 
@@ -30,6 +32,8 @@ namespace BOO.Procedure
         {
             GameEntry.Event.Unsubscribe(LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSuccess);
             GameEntry.Event.Unsubscribe(LoadDataTableFailureEventArgs.EventId, OnLoadDataTableFailure);
+            GameEntry.Event.Unsubscribe(LoadDictionarySuccessEventArgs.EventId, OnLoadDictionarySuccess);
+            GameEntry.Event.Unsubscribe(LoadDictionaryFailureEventArgs.EventId, OnLoadDictionaryFailure);
 
             base.OnLeave(procedureOwner, isShutdown);
         }
@@ -46,27 +50,36 @@ namespace BOO.Procedure
                 }
             }
 
-            procedureOwner.SetData<VarInt32>("NextSceneId",1);
+            procedureOwner.SetData<VarInt32>("NextSceneId", 1);
             ChangeState<ProcedureChangeScene>(procedureOwner);
         }
 
         private void PreloadResources()
         {
             PlayerInputManager.Instance.OnInit();
-            
+
             LoadDataTable();
-            
+
+            LoadDictionary("Default");
+
             //GameEntry.Resource.InitResources(InitResourcesComplete);
         }
 
         private void LoadDataTable()
         {
-            foreach (string dataTableName in DataTableNameScanner.GetDataTableNames() )
+            foreach (string dataTableName in DataTableNameScanner.GetDataTableNames())
             {
                 string dataTableAssetName = AssetUtility.GetDataTableAsset(dataTableName, false);
                 m_LoadedFlag.Add(dataTableAssetName, false);
                 GameEntry.DataTable.LoadDataTable(dataTableName, dataTableAssetName, this);
             }
+        }
+
+        private void LoadDictionary(string dictionaryName)
+        {
+            string dictionaryAssetName = AssetUtility.GetDictionaryAsset(dictionaryName, false);
+            m_LoadedFlag.Add(dictionaryAssetName, false);
+            GameEntry.Localization.ReadData(dictionaryAssetName, this);
         }
 
         private void OnLoadDataTableSuccess(object sender, GameEventArgs e)
@@ -89,9 +102,36 @@ namespace BOO.Procedure
                 return;
             }
 
-            Log.Error("Can not load data table '{0}' from '{1}' with error message '{2}'.", ne.DataTableAssetName, ne.DataTableAssetName, ne.ErrorMessage);
+            Log.Error("Can not load data table '{0}' from '{1}' with error message '{2}'.", ne.DataTableAssetName,
+                ne.DataTableAssetName, ne.ErrorMessage);
         }
-        
+
+
+        private void OnLoadDictionarySuccess(object sender, GameEventArgs e)
+        {
+            LoadDictionarySuccessEventArgs ne = (LoadDictionarySuccessEventArgs)e;
+            if (ne.UserData != this)
+            {
+                return;
+            }
+
+            m_LoadedFlag[ne.DictionaryAssetName] = true;
+            Log.Info("Load dictionary '{0}' OK.", ne.DictionaryAssetName);
+        }
+
+        private void OnLoadDictionaryFailure(object sender, GameEventArgs e)
+        {
+            LoadDictionaryFailureEventArgs ne = (LoadDictionaryFailureEventArgs)e;
+            if (ne.UserData != this)
+            {
+                return;
+            }
+
+            Log.Error("Can not load dictionary '{0}' from '{1}' with error message '{2}'.", ne.DictionaryAssetName,
+                ne.DictionaryAssetName, ne.ErrorMessage);
+        }
+
+
         private void InitResourcesComplete()
         {
             Debug.Log("Resources initialized.");

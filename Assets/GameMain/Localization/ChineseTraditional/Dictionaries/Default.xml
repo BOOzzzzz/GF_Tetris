@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Dictionaries>
+  <Dictionary Language="ChineseTraditional">
+    <String Key="Pause" Value="暫停" />
+    <String Key="Resume" Value="繼續" />
+    <String Key="Menu" Value="菜單" />
+    <String Key="Quit" Value="退出" />
+    <String Key="Back" Value="返回" />
+    <String Key="Music" Value="音樂" />
+    <String Key="Sound" Value="音效" />
+    <String Key="Language" Value="語言" />
+    <String Key="Tetris" Value="俄羅斯方塊" />
+    <String Key="Start" Value="開始游戲" />
+    <String Key="Setting" Value="設置" />
+    <String Key="NextBlock" Value="下一個方塊" />
+    <String Key="Score" Value="分數" />
+    <String Key="GameOver" Value="游戲結束" />
+    <String Key="TryAgain" Value="再試一次" />
+    <String Key="Confirm" Value="確定" />
+    <String Key="You will need to restart the game after switching languages" Value="切換語言后需要重啓游戲" />
+    <String Key="ChineseTraditional" Value="繁體中文" />
+    <String Key="ChineseSimplified" Value="簡體中文" />
+    <String Key="English" Value="英文" />
+  </Dictionary>
+</Dictionaries>

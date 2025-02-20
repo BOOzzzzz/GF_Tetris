@@ -1,6 +1,4 @@
 
-using System.Collections;
-using System.Collections.Generic;
 using BOO;
 using BOO.Procedure;
 using UnityEditor;
@@ -32,6 +30,7 @@ public class UIFormMenuLogic : UIFormLogicEx
         {
             GameEntry.Sound.PlayUISound((int)EnumSound.NewGame);
             
+            GameEntry.UI.OpenUIForm(AssetUtility.GetUIFormAsset("UIFormOption"), "Menu" ,true, UIForm ,null);
         }));
         
         btnQuit.onClick.AddListener((() =>

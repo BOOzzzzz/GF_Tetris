@@ -4,7 +4,6 @@ using BOO;
 using BOO.Procedure;
 using GameFramework.Event;
 using GameMain.Scripts.Event;
-using GameMain.Scripts.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
