@@ -60,7 +60,7 @@ namespace BOO.Procedure
             PlayerInputManager.Instance.onCancelPause += OnCancelPause;
             PlayerInputManager.Instance.OnEnable();
 
-            GameEntry.Resource.LoadAsset(AssetUtility.GetSpriteAsset("Block-Shadow@3x"), typeof(Sprite),
+            GameEntry.Resource.LoadAsset(AssetUtility.GetSpriteAsset("Block-Shadow"), typeof(Sprite),
                 new LoadAssetCallbacks(LoadAssetSuccess));
             
             GameEntry.Event.Subscribe(SpawnBlockEventArgs.EventId, SpawnBlock);

@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Localization;
 using GameFramework.Procedure;
@@ -66,7 +68,7 @@ namespace BOO.Procedure
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
             
-            ChangeState<ProcedurePreload>(procedureOwner);
+            ChangeState<ProcedureSplash>(procedureOwner);
         }
     }
 }

@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<UnityGameFramework>
+  <ResourceCollection>
+    <Resources>
+      <Resource Name="Assets/Font/KNMaiyuan-Regular" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Music/MainMusic" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Music/ObservingTheStar" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Sounds/Drop" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Sounds/Move" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Sounds/NewGame" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Sounds/Pause" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Sounds/Resume" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Sounds/Rotate" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Sprite/Block" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Sprite/Border" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Sprite/Panel-OneCorner-Border" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Sprite/Panel-OneCorner-Fill" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Sprite/Panel-TwoCorners-Background" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Sprite/Panel-TwoCorners-Border" LoadType="0" Packed="False" />
+      <Resource Name="Assets/Sprite/Toggle-Icon" LoadType="0" Packed="False" />
+      <Resource Name="DataTables/Entity" LoadType="0" Packed="False" />
+      <Resource Name="DataTables/Music" LoadType="0" Packed="False" />
+      <Resource Name="DataTables/Scene" LoadType="0" Packed="False" />
+      <Resource Name="DataTables/Sound" LoadType="0" Packed="False" />
+      <Resource Name="Entities/Shape" LoadType="0" Packed="False" />
+      <Resource Name="Localization/ChineseSimplified/Dictionaries/Default" LoadType="0" Packed="False" />
+      <Resource Name="Localization/ChineseTraditional/Dictionaries/Default" LoadType="0" Packed="False" />
+      <Resource Name="Localization/English/Dictionaries/Default" LoadType="0" Packed="False" />
+      <Resource Name="Scenes/GameMain" LoadType="0" Packed="False" />
+      <Resource Name="Scenes/GameMenu" LoadType="0" Packed="False" />
+      <Resource Name="Scenes/Launch" LoadType="0" Packed="False" />
+      <Resource Name="UI/UIForms/UIFormGameOver" LoadType="0" Packed="False" />
+      <Resource Name="UI/UIForms/UIFormMain" LoadType="0" Packed="False" />
+      <Resource Name="UI/UIForms/UIFormMenu" LoadType="0" Packed="False" />
+      <Resource Name="UI/UIForms/UIFormOption" LoadType="0" Packed="False" />
+      <Resource Name="UI/UIForms/UIFormPause" LoadType="0" Packed="False" />
+      <Resource Name="UI/Utility/Btn" LoadType="0" Packed="False" />
+    </Resources>
+    <Assets>
+      <Asset Guid="008813de5cc34f74b92061494e2280dc" ResourceName="UI/UIForms/UIFormMain" />
+      <Asset Guid="0c7ae630c4c1d744da353b08442d0b32" ResourceName="Entities/Shape" />
+      <Asset Guid="195e75b990338bf42a48bd84579f9424" ResourceName="UI/UIForms/UIFormOption" />
+      <Asset Guid="1f13c3d677eac5242b1ff541e31b9c7e" ResourceName="DataTables/Music" />
+      <Asset Guid="2f47651e2892cb441aca979175d692ee" ResourceName="UI/UIForms/UIFormMenu" />
+      <Asset Guid="34cb544d45bc56a4a9124e029becd0b1" ResourceName="DataTables/Sound" />
+      <Asset Guid="373de80a972fe94498c393e52aa66943" ResourceName="Scenes/GameMain" />
+      <Asset Guid="3e2287de03a004ca28926b772bf0f44e" ResourceName="Assets/Sprite/Panel-OneCorner-Fill" />
+      <Asset Guid="4407275088e01a242aef0a9ecfb3d3a6" ResourceName="UI/Utility/Btn" />
+      <Asset Guid="45ae0b1ee1759734eb96299add7254bc" ResourceName="Scenes/GameMenu" />
+      <Asset Guid="4be0660b30bc144f0b7e958c05ccfc06" ResourceName="Assets/Sounds/NewGame" />
+      <Asset Guid="656bc1d7757334fa38b51b90f13dac03" ResourceName="Assets/Sounds/Drop" />
+      <Asset Guid="676dc924e6159674db9c3779fe6f1525" ResourceName="Assets/Font/KNMaiyuan-Regular" />
+      <Asset Guid="6900a3ef19d50364cae84901355f32f8" ResourceName="Localization/ChineseSimplified/Dictionaries/Default" />
+      <Asset Guid="69f03a477c920974c8b49c71cb7696cc" ResourceName="DataTables/Entity" />
+      <Asset Guid="6b0b73709adf44a0c8f54088937dd961" ResourceName="Assets/Sounds/Move" />
+      <Asset Guid="6d55945d7fd594f7985df2b3deeeb300" ResourceName="Assets/Sprite/Block" />
+      <Asset Guid="81dee05b4386b43af930048b171b4847" ResourceName="Assets/Sprite/Border" />
+      <Asset Guid="8e9f2fc178c5c4d17a8321e522a22863" ResourceName="Assets/Sounds/Resume" />
+      <Asset Guid="973dd015483dc40ce83b202f6b15af6d" ResourceName="Assets/Sprite/Panel-OneCorner-Border" />
+      <Asset Guid="98cf3a22b6051fe498c0409a01617659" ResourceName="Assets/Music/MainMusic" />
+      <Asset Guid="9fc0d4010bbf28b4594072e72b8655ab" ResourceName="Scenes/Launch" />
+      <Asset Guid="a81685abd4eb3ec4892f4432afb1abb1" ResourceName="UI/UIForms/UIFormPause" />
+      <Asset Guid="beb8ea48d71860d4fa548037c92b32fc" ResourceName="DataTables/Sound" />
+      <Asset Guid="c4b1985faee2b42e0aa84c142442a42c" ResourceName="Assets/Sounds/Rotate" />
+      <Asset Guid="c98cd9eafdf3fa4479dcb9435b8cde13" ResourceName="DataTables/Music" />
+      <Asset Guid="cc986b21ec524447ba2975ec7c92aa93" ResourceName="Assets/Sprite/Panel-TwoCorners-Background" />
+      <Asset Guid="cc995f33a894f604c8f7a89d95df5dcb" ResourceName="Localization/ChineseTraditional/Dictionaries/Default" />
+      <Asset Guid="d09323ac8e99ad44ba027dc1a172111d" ResourceName="DataTables/Scene" />
+      <Asset Guid="d98f023410bec354c8c8cb29f4d8f12e" ResourceName="UI/UIForms/UIFormGameOver" />
+      <Asset Guid="e0f0076450bed0b4e8a51c82f829afd2" ResourceName="Assets/Music/ObservingTheStar" />
+      <Asset Guid="e45b407c61aa9403e95b4ca4ea375ae5" ResourceName="Assets/Sprite/Toggle-Icon" />
+      <Asset Guid="e670025708655b94882bd0fb833da40c" ResourceName="DataTables/Scene" />
+      <Asset Guid="f15538b01ecb5254a8ff9d9736ee6e22" ResourceName="Localization/English/Dictionaries/Default" />
+      <Asset Guid="fa07b5ff403af2944b1d947f45b4b078" ResourceName="DataTables/Entity" />
+      <Asset Guid="fa68247b03bdd43dcb9e1a6b50423c93" ResourceName="Assets/Sprite/Panel-TwoCorners-Border" />
+      <Asset Guid="fc9ca9bd050174388945a4648d36d601" ResourceName="Assets/Sounds/Pause" />
+    </Assets>
+  </ResourceCollection>
+</UnityGameFramework>

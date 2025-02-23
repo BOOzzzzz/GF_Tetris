@@ -13,6 +13,14 @@ namespace BOO.Procedure
     public class ProcedurePreload : ProcedureBase
     {
         private Dictionary<string, bool> m_LoadedFlag = new Dictionary<string, bool>();
+        
+        public static readonly string[] DataTableNames = new string[]
+        {
+            "Entity",
+            "Music",
+            "Scene",
+            "Sound",
+        };
 
         protected override void OnEnter(ProcedureOwner procedureOwner)
         {
@@ -61,14 +69,13 @@ namespace BOO.Procedure
             LoadDataTable();
 
             LoadDictionary("Default");
-
-            //GameEntry.Resource.InitResources(InitResourcesComplete);
         }
 
         private void LoadDataTable()
         {
-            foreach (string dataTableName in DataTableNameScanner.GetDataTableNames())
+            foreach (string dataTableName in DataTableNames)
             {
+                Debug.Log(dataTableName);
                 string dataTableAssetName = AssetUtility.GetDataTableAsset(dataTableName, false);
                 m_LoadedFlag.Add(dataTableAssetName, false);
                 GameEntry.DataTable.LoadDataTable(dataTableName, dataTableAssetName, this);
